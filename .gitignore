@@ -1,0 +1,17 @@
+# Compiled Binaries #
+*.class
+*.pyc
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Generated Files #
+**/target/
+**/logs/
+log/
+
+# IDE Files #
+.idea
+*.iml
