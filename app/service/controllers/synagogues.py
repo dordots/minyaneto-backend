@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 from app.service.dal.search_svc import Dao
 from app.utils.esjsonformat import synagogue_format
+from decimal import Decimal
 
 api_synagogues = Blueprint('api_synagogues', __name__)
 
@@ -8,9 +9,9 @@ api_synagogues = Blueprint('api_synagogues', __name__)
 @api_synagogues.route('/', methods=['GET'])
 def get_synagogues():
     tl = request.args.get('top_left').split(',')
-    top_left = {'lat': int(tl[0]), 'lon': int(tl[1])}
+    top_left = {'lat': Decimal(tl[0]), 'lon': Decimal(tl[1])}
     br = request.args.get('bottom_right').split(',')
-    bottom_right = {'lat': int(br[0]), 'lon': int(br[1])}
+    bottom_right = {'lat': Decimal(br[0]), 'lon': Decimal(br[1])}
 
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'],
               current_app.config['ELASTIC_SEARCH_PORT'],
