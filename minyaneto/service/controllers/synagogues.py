@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.service.dal.search_svc import Dao
-from app.utils.esjsonformat import synagogue_format
 from decimal import Decimal
+
+from minyaneto.service.dal.search_svc import Dao
+from minyaneto.utils.esjsonformat import synagogue_format
 
 api_synagogues = Blueprint('api_synagogues', __name__)
 

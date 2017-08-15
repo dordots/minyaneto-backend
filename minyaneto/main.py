@@ -2,7 +2,7 @@ import logging
 import os
 from flask import Flask, jsonify, request
 
-from app.service.controllers.synagogues import api_synagogues
+from service.controllers.synagogues import api_synagogues
 
 
 def configure_logger():
@@ -28,7 +28,7 @@ def configure_logger():
 
 
 app = Flask(__name__, static_url_path='')
-app.config.from_object("app.config.release.Config")
+app.config.from_object("minyaneto.config.release.Config")
 v = '/v1'
 app.register_blueprint(api_synagogues, url_prefix=v + '/synagogues')
 configure_logger()
