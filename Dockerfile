@@ -25,7 +25,7 @@ RUN sh ./setup.linux.sh
 # ------------- CLEAN IMAGE ------------------
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV PYTHONPATH=/srv/src/minyaneto/app
+ENV PYTHONPATH=/srv/src/minyaneto
 
 EXPOSE 80 443
 
