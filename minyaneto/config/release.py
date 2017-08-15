@@ -22,7 +22,4 @@ class Config(object):
     SECRET_KEY = "agyg87ssk09lJUa3@sedyuy+RijoijaUHT21wsAvzbmx.momiJHBJJSYY00Lo"
 
     SQLALCHEMY_POOL_SIZE = 5
-    ELASTIC_SEARCH_HOSTS = ["127.0.0.1"]
-    ELASTIC_SEARCH_PORT = 9200
-    ELASTIC_SEARCH_USER = "elastic"
-    ELASTIC_SEARCH_PASS = "changeme"
+    ELASTIC_SEARCH_HOSTS = ['https://search-startach-es-kjunyv6dur2zgmoygirwebhxaa.us-east-1.es.amazonaws.com']

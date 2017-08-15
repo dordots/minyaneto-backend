@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, jsonify, request, current_app
 from decimal import Decimal
 
@@ -7,6 +9,15 @@ from minyaneto.utils.esjsonformat import synagogue_format
 api_synagogues = Blueprint('api_synagogues', __name__)
 
 
+
+@api_synagogues.route('/', methods=['POST'])
+def add_synagogue():
+    synagouge = json.loads(request.data)
+    dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
+    synagogue_id = dao.add_synagogue(synagouge)
+    return jsonify({"id": synagogue_id})
+
+
 @api_synagogues.route('/', methods=['GET'])
 def get_synagogues():
     tl = request.args.get('top_left').split(',')
@@ -14,9 +25,6 @@ def get_synagogues():
     br = request.args.get('bottom_right').split(',')
     bottom_right = {'lat': Decimal(br[0]), 'lon': Decimal(br[1])}
 
-    dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'],
-              current_app.config['ELASTIC_SEARCH_PORT'],
-              current_app.config['ELASTIC_SEARCH_USER'],
-              current_app.config['ELASTIC_SEARCH_PASS'])
+    dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
     synagogues = dao.search_synagogues(top_left, bottom_right)
     return jsonify({"synagogues": [synagogue_format(x) for x in synagogues]})
