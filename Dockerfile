@@ -17,17 +17,17 @@ RUN chmod 644 /usr/lib/uwsgi/plugins/python27_plugin.so && pip install --upgrade
 RUN /bin/bash -c "mkdir -p /srv/{data,src} && chown www-data:www-data /srv/data"
 
 WORKDIR /srv/src
-ADD . ./minyaneto
+ADD . ./minyaneto-backend
 
-WORKDIR /srv/src/minyaneto/scripts
+WORKDIR /srv/src/minyaneto-backend/scripts
 RUN sh ./setup.linux.sh
 
 # ------------- CLEAN IMAGE ------------------
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV PYTHONPATH=/srv/src/minyaneto/app
+ENV PYTHONPATH=/srv/src/minyaneto-backend
 
 EXPOSE 80 443
 
 # Entry command
-ENTRYPOINT uwsgi --ini /srv/src/minyaneto/minyaneto.ini
+ENTRYPOINT uwsgi --ini /srv/src/minyaneto-backend/minyaneto.ini
