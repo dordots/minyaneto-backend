@@ -1,4 +1,4 @@
-# run this from startach machine on amazon aws
+# run this from startach machine on amazon aws (ssh startach)
 
 cd ~/deploy/minyaneto-backend
 git pull

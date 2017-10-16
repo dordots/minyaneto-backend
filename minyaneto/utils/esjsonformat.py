@@ -9,5 +9,5 @@ def synagogue_format(synagogue):
         "parking": synagogue_src['parking'],
         "sefer-tora": synagogue_src['sefer-tora'],
         "wheelchair-accessible": synagogue_src['wheelchair-accessible'],
-        "zmanim": synagogue_src['zmanim']
+        "minyans": synagogue_src['minyans']
     }

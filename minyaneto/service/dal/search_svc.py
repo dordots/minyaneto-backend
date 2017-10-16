@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
 
 MINYANETO_INDEX = 'minyaneto'
+MINYANETO_DOCTYPE = 'synagogues'
 
 
 class Dao(object):
@@ -8,7 +9,7 @@ class Dao(object):
         self.es = Elasticsearch(es_hosts)
 
     def add_synagogue(self, synagouge_dict):
-        res = self.es.index(index=MINYANETO_INDEX, doc_type='synagogues', body=synagouge_dict)
+        res = self.es.index(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=synagouge_dict)
         return res['_id']
 
     def search_synagogues(self, geo_top_left, geo_bottom_right):
@@ -23,5 +24,5 @@ class Dao(object):
             }
         }
 
-        res = self.es.search(index=MINYANETO_INDEX, doc_type='synagogues', body=b)
+        res = self.es.search(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=b)
         return res['hits']['hits']
