@@ -1,5 +1,7 @@
 import logging
 import os
+
+import sys
 from flask import Flask, jsonify, request
 
 from service.controllers.synagogues import api_synagogues
@@ -27,7 +29,11 @@ def configure_logger():
     app.logger.info('Start...')
 
 
-app = Flask(__name__, static_url_path='')
+
+caller_filename = sys._getframe().f_back.f_code.co_filename
+base_dir = os.path.dirname(os.path.abspath(caller_filename))
+static_dir = os.path.join(base_dir, '../minyaneto/static')
+app = Flask(__name__, static_url_path='', static_folder=static_dir)
 app.config.from_object("minyaneto.config.release.Config")
 v = '/v1'
 app.register_blueprint(api_synagogues, url_prefix=v + '/synagogues')
@@ -37,3 +43,8 @@ configure_logger()
 @app.route('/')
 def empty_root():
     return jsonify({"hello": "!"})
+
+@app.route('/map')
+def map():
+    return app.send_static_file('map.html')
+

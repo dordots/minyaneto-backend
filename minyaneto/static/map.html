@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Minyans</title>
+  <script src="http://maps.google.com/maps/api/js?sensor=false"
+          type="text/javascript"></script>
+
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <div id="map" style="width: 1000px; height: 800px;"></div>
+
+  <script type="text/javascript">
+
+    $.get("v1/synagogues/?top_left=33.2326675,34.0780113&bottom_right=29.3842887,35.8924053", function(data, status){
+
+        var locations = data.synagogues;
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: new google.maps.LatLng(31.7962419,35.0352739), // Jerusalem
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+
+            var synagogue = locations[i];
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(synagogue.geo.lat, synagogue.geo.lon),
+            title: synagogue.name,
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+
+        var minyansHtml='';
+        for (var j = 0; j < synagogue.minyans.length; j++) {
+            var minyan = synagogue.minyans[j];
+            minyansHtml += '<li>Address: '+ JSON.stringify(minyan).replace(/"/g, " ") +'</li>';
+        }
+
+      var contentHtml = '<div id="content">'+
+          '<h1 id="firstHeading">' + synagogue.name+'</h1>'+
+          '<div id="bodyContent">'+
+          '<p>'+
+          '<span><b>Address:</b> '+ synagogue.address +'</span><br>'+
+          '<span><b>Nosach:</b> '+ synagogue.nosach + '</span><br>'+
+          '<span><b>Comments:</b> '+ synagogue.comments + '</span><br>'+
+          '<span><b>Minyans:</b> </span><br>'+
+
+          '<ul>'+minyansHtml +'</ul>'+
+          '</p>'+
+          '</div>'+
+          '</div>';
+
+              infowindow.setContent(contentHtml);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+        }
+    });
+  </script>
+</body>
+</html>
