@@ -17,6 +17,8 @@ RAW_PATH = "../data/raw_cities_data/"
 DICT_FILE = "../data/dict.json"
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
+google_translate = Translator()
+
 
 def godaven_to_minyaneto(gd_item):
     """
@@ -254,6 +256,7 @@ def scrape_godaven_to_files():
 
 
 def add_godaven_minyans_from_files_to_elastic():
+    synagouges = []
     es = Elasticsearch(Config.ELASTIC_SEARCH_HOSTS)
 
     for filename in os.listdir(RAW_PATH):
@@ -261,50 +264,22 @@ def add_godaven_minyans_from_files_to_elastic():
         if filename.endswith(".txt"):
             with open(os.path.join(RAW_PATH, filename)) as f:
                 data = f.read()
-                try:
-                    godaven_synagouges = json.loads("[{" + data[32:-3] + "]")
-                except Exception as e:
-                    raise e
-
-                for godaven_synagouge in godaven_synagouges:
-                    minyaneto_synagouge = godaven_to_minyaneto(godaven_synagouge)
-                    res = es.index(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=minyaneto_synagouge)
-                    print res
-
-
-
-def create_translator():
-    def _word(str):
-        import re
-        return " ".join(re.findall("[a-zA-Z]+", str)).lower()
-
-    words = set()
-    _dict = {}
-    for filename in os.listdir(RAW_PATH):
-        if filename.endswith(".txt"):
-            with open(os.path.join(RAW_PATH, filename)) as f:
-                data = f.read()
                 godaven_synagouges = json.loads("[{" + data[32:-3] + "]")
 
                 for godaven_synagouge in godaven_synagouges:
                     minyaneto_synagouge = godaven_to_minyaneto(godaven_synagouge)
-                    words.update([_word(x) for x in minyaneto_synagouge['comments'].split(' ')])
-                    words.update([_word(x) for x in minyaneto_synagouge['name'].split(' ')])
 
+                    # translate only Israelis syngouges:
+                    if godaven_synagouge['Country'].lower() == 'israel':
+                        res = google_translate.translate([minyaneto_synagouge['name'], minyaneto_synagouge['comments']], src='en', dest='iw')
+                        minyaneto_synagouge['name'] = res[0].text
+                        minyaneto_synagouge['comments'] = res[1].text
 
-    for word in words:
-        google_translate = Translator()
-        res = google_translate.translate(word, src='en', dest='iw')
-        _dict[word] = res.text
-
-    with open(DICT_FILE, "w") as f:
-        f.write(json.dumps(_dict, sort_keys=True, indent=4))
-
-    pass
-
-
+                    synagouges.append(minyaneto_synagouge)
+                    res = es.index(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=minyaneto_synagouge)
+                    print res
+                    
 
 if __name__ == '__main__':
     # scrape_godaven_to_files()
-    # add_godaven_minyans_from_files_to_elastic()
-    create_translator()
+    add_godaven_minyans_from_files_to_elastic()
