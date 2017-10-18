@@ -1,9 +1,6 @@
 import logging
 import os
-
-import sys
-from flask import Flask, jsonify, request
-
+from flask import Flask, jsonify
 from service.controllers.synagogues import api_synagogues
 
 
@@ -30,9 +27,8 @@ def configure_logger():
 
 
 
-caller_filename = sys._getframe().f_back.f_code.co_filename
-base_dir = os.path.dirname(os.path.abspath(caller_filename))
-static_dir = os.path.join(base_dir, '../minyaneto/static')
+base_dir = os.path.dirname(os.path.realpath(__file__))
+static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, static_url_path='', static_folder=static_dir)
 app.config.from_object("minyaneto.config.release.Config")
 v = '/v1'
@@ -47,4 +43,5 @@ def empty_root():
 @app.route('/map')
 def map():
     return app.send_static_file('map.html')
+
 

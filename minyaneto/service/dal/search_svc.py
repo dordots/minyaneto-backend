@@ -12,7 +12,7 @@ class Dao(object):
         res = self.es.index(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=synagouge_dict)
         return res['_id']
 
-    def search_synagogues(self, geo_top_left, geo_bottom_right):
+    def search_synagogues(self, geo_top_left, geo_bottom_right, max_hits=10):
         b = {
             "query": {
                 "geo_bounding_box": {
@@ -24,5 +24,5 @@ class Dao(object):
             }
         }
 
-        res = self.es.search(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=b)
+        res = self.es.search(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=b, size=max_hits)
         return res['hits']['hits']

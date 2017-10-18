@@ -20,11 +20,12 @@ def add_synagogue():
 
 @api_synagogues.route('/', methods=['GET'])
 def get_synagogues():
+    max_hits = request.args.get('max_hits', 10)
     tl = request.args.get('top_left').split(',')
     top_left = {'lat': Decimal(tl[0]), 'lon': Decimal(tl[1])}
     br = request.args.get('bottom_right').split(',')
     bottom_right = {'lat': Decimal(br[0]), 'lon': Decimal(br[1])}
 
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
-    synagogues = dao.search_synagogues(top_left, bottom_right)
+    synagogues = dao.search_synagogues(top_left, bottom_right, max_hits=max_hits)
     return jsonify({"synagogues": [synagogue_format(x) for x in synagogues]})
