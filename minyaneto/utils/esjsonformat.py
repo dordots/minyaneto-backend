@@ -1,6 +1,7 @@
 def synagogue_format(synagogue):
     synagogue_src = synagogue["_source"]
     return {
+        "id": synagogue["_id"],
         "address": synagogue_src["address"],
         "classes": synagogue_src['classes'],
         "geo": synagogue_src['geo'],
