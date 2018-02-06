@@ -26,12 +26,24 @@
 
   // default is a square contains Israel
   var max_hits = getHashValue('max_hits') || '10';
-  var top_left = getHashValue('top_left') || '33.2326675,34.0780113';
-  var bottom_right = getHashValue('bottom_right') || '29.3842887,35.8924053';
+
+  var top_left = getHashValue('top_left');
+  var bottom_right = getHashValue('bottom_right');
+
+  var center = getHashValue('center');
+  var radius = getHashValue('radius');
+
+  var query = '?max_hits=' + max_hits;
+  if (center && radius){
+    query += "&center=" + center + "&radius=" + radius;
+  }
+  else {
+    query += "&top_left=" + top_left + "&bottom_right=" + bottom_right;
+  }
 
 
 
-    $.get("v1/synagogues/?max_hits=" + max_hits + "&top_left=" + top_left + "&bottom_right=" + bottom_right, function(data, status){
+    $.get("v1/synagogues/" + query, function(data, status){
 
         var locations = data.synagogues;
 

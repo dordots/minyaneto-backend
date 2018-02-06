@@ -3,12 +3,11 @@ import json
 from flask import Blueprint, jsonify, request, current_app
 from decimal import Decimal
 
-from minyaneto.service.controllers.responses import no_content
+from minyaneto.service.controllers.responses import no_content, bad_request
 from minyaneto.service.dal.search_svc import Dao
 from minyaneto.utils.esjsonformat import synagogue_format
 
 api_synagogues = Blueprint('api_synagogues', __name__)
-
 
 
 @api_synagogues.route('/', methods=['POST'])
@@ -28,15 +27,25 @@ def update_synagogue(id):
 
 
 @api_synagogues.route('/', methods=['GET'])
-def get_synagogues():
-    max_hits = request.args.get('max_hits', 10)
-    tl = request.args.get('top_left').split(',')
-    top_left = {'lat': Decimal(tl[0]), 'lon': Decimal(tl[1])}
-    br = request.args.get('bottom_right').split(',')
-    bottom_right = {'lat': Decimal(br[0]), 'lon': Decimal(br[1])}
-
+def search_synagogues_by_rectangle():
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
-    synagogues = dao.search_synagogues(top_left, bottom_right, max_hits=max_hits)
+    max_hits = request.args.get('max_hits', 10)
+
+    # option 1:
+    top_left = request.args.get('top_left')
+    bottom_right = request.args.get('bottom_right')
+
+    # option 2:
+    center = request.args.get('center')
+    radius = request.args.get('radius')
+
+    if center and radius:
+        synagogues = dao.search_synagogues_in_circle(center, radius, max_hits=max_hits)
+    elif top_left and bottom_right:
+        synagogues = dao.search_synagogues_in_rectangle(top_left, bottom_right, max_hits=max_hits)
+    else:
+        return bad_request()
+
     return jsonify({"synagogues": [synagogue_format(x) for x in synagogues]})
 
 
