@@ -15,3 +15,7 @@ log/
 # IDE Files #
 .idea
 *.iml
+
+# Raw Data #
+data/raw_cities_data/
+*.mdb
