@@ -28,7 +28,7 @@ def update_synagogue(id):
 
 
 @api_synagogues.route('/', methods=['GET'])
-def search_synagogues_by_rectangle():
+def search_synagogues():
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
     max_hits = request.args.get('max_hits', 10)
 
