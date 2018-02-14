@@ -45,3 +45,14 @@ def map():
     return app.send_static_file('map.html')
 
 
+@app.errorhandler(500)
+def internal_error(exception):
+    app.logger.exception(exception)
+
+    if app.debug:
+        raise exception
+
+    response = jsonify({'message': exception.message})
+    response.status_code = 500
+    return response
+
