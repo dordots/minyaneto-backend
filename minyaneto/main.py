@@ -26,7 +26,6 @@ def configure_logger():
     app.logger.info('Start...')
 
 
-
 base_dir = os.path.dirname(os.path.realpath(__file__))
 static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, static_url_path='', static_folder=static_dir)
@@ -39,6 +38,7 @@ configure_logger()
 @app.route('/')
 def empty_root():
     return jsonify({"hello": "!"})
+
 
 @app.route('/map')
 def map():

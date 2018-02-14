@@ -1,10 +1,9 @@
 import json
 
 from flask import Blueprint, jsonify, request, current_app
-from decimal import Decimal
-
 from minyaneto.service.controllers.responses import no_content, bad_request
 from minyaneto.service.dal.search_svc import Dao
+from minyaneto.service.modules.validators import validate_synagogues
 from minyaneto.utils.esjsonformat import synagogue_format
 
 api_synagogues = Blueprint('api_synagogues', __name__)
@@ -13,6 +12,7 @@ api_synagogues = Blueprint('api_synagogues', __name__)
 @api_synagogues.route('/', methods=['POST'])
 def add_synagogue():
     synagouge = json.loads(request.data)
+    validate_synagogues(synagouge)
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
     synagogue_id = dao.add_synagogue(synagouge)
     return jsonify({"id": synagogue_id})
@@ -21,6 +21,7 @@ def add_synagogue():
 @api_synagogues.route('/<id>', methods=['PUT'])
 def update_synagogue(id):
     synagouge = json.loads(request.data)
+    validate_synagogues(synagouge)
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
     dao.update_synagogue(id, synagouge)
     return no_content()
