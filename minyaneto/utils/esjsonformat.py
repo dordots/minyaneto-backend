@@ -2,14 +2,14 @@ def synagogue_format(synagogue):
     synagogue_src = synagogue["_source"]
     return {
         "id": synagogue["_id"],
-        "address": synagogue_src["address"],
-        "classes": synagogue_src['classes'],
         "geo": synagogue_src['geo'],
         "name": synagogue_src['name'],
-        "nosach": synagogue_src['nosach'],
-        "parking": synagogue_src['parking'],
-        "sefer-tora": synagogue_src['sefer-tora'],
-        "wheelchair-accessible": synagogue_src['wheelchair-accessible'],
-        "minyans": synagogue_src['minyans'],
-        "comments": synagogue_src['comments']
+        "address": synagogue_src.get("address"),
+        "classes": synagogue_src.get('classes'),
+        "nosach": synagogue_src.get('nosach'),
+        "parking": synagogue_src.get('parking'),
+        "sefer-tora": synagogue_src.get('sefer-tora'),
+        "wheelchair-accessible": synagogue_src.get('wheelchair-accessible'),
+        "minyans": synagogue_src.get('minyans'),
+        "comments": synagogue_src.get('comments')
     }
