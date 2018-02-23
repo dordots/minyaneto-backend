@@ -47,11 +47,11 @@ def search_synagogues():
     else:
         return bad_request()
 
-    return jsonify({"synagogues": [synagogue_format(x) for x in synagogues]})
+    return jsonify([synagogue_format(x) for x in synagogues])
 
 
 @api_synagogues.route('/<id>', methods=['GET'])
 def get_synagogue(id):
     dao = Dao(current_app.config['ELASTIC_SEARCH_HOSTS'])
     synagogue = dao.get_synagogue(id)
-    return jsonify({"synagogue": synagogue_format(synagogue)})
+    return jsonify(synagogue_format(synagogue))
