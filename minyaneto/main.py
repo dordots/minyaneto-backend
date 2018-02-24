@@ -1,6 +1,8 @@
 import logging
 import os
 from flask import Flask, jsonify
+
+from minyaneto.service.controllers.kehilot import api_kehilot
 from service.controllers.synagogues import api_synagogues
 
 
@@ -30,8 +32,9 @@ base_dir = os.path.dirname(os.path.realpath(__file__))
 static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, static_url_path='', static_folder=static_dir)
 app.config.from_object("minyaneto.config.release.Config")
-v = '/v1'
-app.register_blueprint(api_synagogues, url_prefix=v + '/synagogues')
+
+app.register_blueprint(api_synagogues, url_prefix='/v1/synagogues')
+app.register_blueprint(api_kehilot, url_prefix='/v1/kehilot')
 configure_logger()
 
 

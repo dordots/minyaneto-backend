@@ -13,3 +13,8 @@ def synagogue_format(synagogue):
         "minyans": synagogue_src.get('minyans'),
         "comments": synagogue_src.get('comments')
     }
+
+def kehilot_format(synagogue):
+    x = synagogue_format(synagogue)
+    x["kehilot-display"] = synagogue["_source"].get('kehilot-display')
+    return x

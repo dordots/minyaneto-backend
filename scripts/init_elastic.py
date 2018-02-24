@@ -4,7 +4,7 @@ from minyaneto.service.dal.search_svc import Dao, MINYANETO_INDEX, MINYANETO_DOC
 
 
 def init_elastic():
-    es = Elasticsearch(Config.ELASTIC_SEARCH_HOSTS)
+    es = Elasticsearch(Config.ES_HOSTS)
 
     mapping = {
         "mappings": {

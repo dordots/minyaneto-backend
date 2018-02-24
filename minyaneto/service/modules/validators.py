@@ -36,6 +36,7 @@ synagouge_schema = {
         "parking": {"type": "boolean"},
         "sefer-tora": {"type": "boolean"},
         "wheelchair-accessible": {"type": "boolean"},
+        "kehilot-display": {"type": "boolean"},
         "minyans": minyans_schema
     }
 }

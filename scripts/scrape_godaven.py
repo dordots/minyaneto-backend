@@ -257,7 +257,7 @@ def scrape_godaven_to_files():
 
 def add_godaven_minyans_from_files_to_elastic():
     synagouges = []
-    es = Elasticsearch(Config.ELASTIC_SEARCH_HOSTS)
+    es = Elasticsearch(Config.ES_HOSTS)
 
     for filename in os.listdir(RAW_PATH):
         logger.info(filename)

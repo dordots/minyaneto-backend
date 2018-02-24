@@ -5,33 +5,34 @@ from flask import Blueprint, jsonify, request, current_app
 from minyaneto.service.dal.search_svc import Dao
 from minyaneto.service.modules.validators import validate_synagogues
 from minyaneto.service.responses import no_content, bad_request
-from minyaneto.utils.esjsonformat import synagogue_format
+from minyaneto.utils.esjsonformat import kehilot_format
 
-api_synagogues = Blueprint('api_synagogues', __name__)
+api_kehilot = Blueprint('api_kehilot', __name__)
 
 
-@api_synagogues.route('/', methods=['POST'])
-def add_synagogue():
+@api_kehilot.route('/', methods=['POST'])
+def add_kehilot():
     synagouge = json.loads(request.data)
     validate_synagogues(synagouge)
 
     # add metadata
     synagouge['_submitter_ip'] = request.remote_addr
     synagouge['_added_on'] = synagouge['_last_modified_on'] = time.time()
-    synagouge['_origin'] = "app"
+    synagouge['_origin'] = "kehilot"
 
     dao = Dao(current_app.config['ES_HOSTS'])
     synagogue_id = dao.add_synagogue(synagouge)
     return jsonify({"id": synagogue_id})
 
 
-@api_synagogues.route('/<id>', methods=['PUT'])
-def update_synagogue(id):
+@api_kehilot.route('/<id>', methods=['PUT'])
+def update_kehilot(id):
     synagouge = json.loads(request.data)
     validate_synagogues(synagouge)
 
     # add metadata
     synagouge['_last_modified_on'] = time.time()
+    synagouge['_origin'] = "kehilot"
 
     # TODO: all original metadata is lost. fix this
     dao = Dao(current_app.config['ES_HOSTS'])
@@ -39,8 +40,8 @@ def update_synagogue(id):
     return no_content()
 
 
-@api_synagogues.route('/', methods=['GET'])
-def search_synagogues():
+@api_kehilot.route('/', methods=['GET'])
+def search_kehilot():
     dao = Dao(current_app.config['ES_HOSTS'])
     max_hits = request.args.get('max_hits', 10)
 
@@ -59,11 +60,4 @@ def search_synagogues():
     else:
         return bad_request()
 
-    return jsonify([synagogue_format(x) for x in synagogues])
-
-
-@api_synagogues.route('/<id>', methods=['GET'])
-def get_synagogue(id):
-    dao = Dao(current_app.config['ES_HOSTS'])
-    synagogue = dao.get_synagogue(id)
-    return jsonify(synagogue_format(synagogue))
+    return jsonify([kehilot_format(x) for x in synagogues])
