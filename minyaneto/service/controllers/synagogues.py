@@ -12,6 +12,7 @@ api_synagogues = Blueprint('api_synagogues', __name__)
 
 @api_synagogues.route('/', methods=['POST'])
 def add_synagogue():
+    is_test = request.path.startswith('/test-')
     synagouge = json.loads(request.data)
     validate_synagogues(synagouge)
 
@@ -20,13 +21,14 @@ def add_synagogue():
     synagouge['_added_on'] = synagouge['_last_modified_on'] = time.time()
     synagouge['_origin'] = "app"
 
-    dao = Dao(current_app.config['ES_HOSTS'])
+    dao = Dao(current_app.config['ES_HOSTS'], is_test)
     synagogue_id = dao.add_synagogue(synagouge)
     return jsonify({"id": synagogue_id})
 
 
 @api_synagogues.route('/<id>', methods=['PUT'])
 def update_synagogue(id):
+    is_test = request.path.startswith('/test-')
     synagouge = json.loads(request.data)
     validate_synagogues(synagouge)
 
@@ -34,14 +36,15 @@ def update_synagogue(id):
     synagouge['_last_modified_on'] = time.time()
 
     # TODO: all original metadata is lost. fix this
-    dao = Dao(current_app.config['ES_HOSTS'])
+    dao = Dao(current_app.config['ES_HOSTS'], is_test)
     dao.update_synagogue(id, synagouge)
     return no_content()
 
 
 @api_synagogues.route('/', methods=['GET'])
 def search_synagogues():
-    dao = Dao(current_app.config['ES_HOSTS'])
+    is_test = request.path.startswith('/test-')
+    dao = Dao(current_app.config['ES_HOSTS'], is_test)
     max_hits = request.args.get('max_hits', 10)
 
     # option 1:
@@ -64,6 +67,7 @@ def search_synagogues():
 
 @api_synagogues.route('/<id>', methods=['GET'])
 def get_synagogue(id):
-    dao = Dao(current_app.config['ES_HOSTS'])
+    is_test = request.path.startswith('/test-')
+    dao = Dao(current_app.config['ES_HOSTS'], is_test)
     synagogue = dao.get_synagogue(id)
     return jsonify(synagogue_format(synagogue))

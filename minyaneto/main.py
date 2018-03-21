@@ -33,6 +33,7 @@ static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, static_url_path='', static_folder=static_dir)
 app.config.from_object("minyaneto.config.release.Config")
 
+app.register_blueprint(api_synagogues, url_prefix='/test-v1/synagogues')
 app.register_blueprint(api_synagogues, url_prefix='/v1/synagogues')
 app.register_blueprint(api_kehilot, url_prefix='/v1/kehilot')
 configure_logger()

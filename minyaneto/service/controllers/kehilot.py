@@ -20,7 +20,7 @@ def add_kehilot():
     synagouge['_added_on'] = synagouge['_last_modified_on'] = time.time()
     synagouge['_origin'] = "kehilot"
 
-    dao = Dao(current_app.config['ES_HOSTS'])
+    dao = Dao(current_app.config['ES_HOSTS'], is_test=False)
     synagogue_id = dao.add_synagogue(synagouge)
     return jsonify({"id": synagogue_id})
 
@@ -35,14 +35,14 @@ def update_kehilot(id):
     synagouge['_origin'] = "kehilot"
 
     # TODO: all original metadata is lost. fix this
-    dao = Dao(current_app.config['ES_HOSTS'])
+    dao = Dao(current_app.config['ES_HOSTS'], is_test=False)
     dao.update_synagogue(id, synagouge)
     return no_content()
 
 
 @api_kehilot.route('/', methods=['GET'])
 def search_kehilot():
-    dao = Dao(current_app.config['ES_HOSTS'])
+    dao = Dao(current_app.config['ES_HOSTS'], is_test=False)
     max_hits = request.args.get('max_hits', 10)
 
     # option 1:
