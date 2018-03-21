@@ -32,7 +32,7 @@ class Dao(object):
             }
         }
 
-        res = self.es.search(index=MINYANETO_INDEX, doc_type=MINYANETO_DOCTYPE, body=b, size=max_hits)
+        res = self.es.search(index=self.index, doc_type=MINYANETO_DOCTYPE, body=b, size=max_hits)
         return res['hits']['hits']
 
     def search_synagogues_in_circle(self, center, radius, max_hits=10):
