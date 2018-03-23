@@ -58,3 +58,7 @@ class Dao(object):
     def get_synagogue(self, id):
         res = self.es.get(index=self.index, id=id)
         return res
+
+    def delete_synagogue(self, id):
+        res = self.es.delete(index=self.index, doc_type=MINYANETO_DOCTYPE, id=id)
+        return res
