@@ -17,5 +17,5 @@ log/
 *.iml
 
 # Raw Data #
-data/raw_cities_data/
+data/
 *.mdb
